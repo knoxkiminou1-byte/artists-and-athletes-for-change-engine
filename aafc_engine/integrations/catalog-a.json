@@ -1,0 +1,1 @@
+[{"n":1,"id":"fastapi","name":"FastAPI","repo":"tiangolo/fastapi","url":"https://github.com/tiangolo/fastapi","license":"MIT","systems":["engine","platform","product-factory"],"capability":"Typed HTTP layer for operator actions. Does not replace the JSON store.","status":"adapter","adapter":"http_contract"}]
