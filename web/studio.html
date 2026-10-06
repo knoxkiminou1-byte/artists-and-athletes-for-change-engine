@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AAFC Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@420;560;680&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#07152D; --ink:#0c1b33; --line:#243656; --gold:#E4AC44; --white:#fff; --gray:#B6C1D2; }
+  * { box-sizing:border-box } body { margin:0; background:radial-gradient(1000px 480px at 8% -12%, #1a3d6e, transparent), var(--navy); color:var(--white); font-family:Inter, sans-serif }
+  header { display:flex; justify-content:space-between; gap:18px; align-items:end; padding:28px 28px 6px }
+  h1 { font-family:Montserrat, sans-serif; margin:0; font-size:30px } h1 span { color:var(--gold) }
+  .lead { color:var(--gray); max-width:680px; margin:8px 0 0 }
+  .stats { display:flex; gap:8px; flex-wrap:wrap } .stat { background:var(--ink); border:1px solid var(--line); border-radius:14px; padding:10px 14px } .stat b { display:block; color:var(--gold); font-size:20px } .stat span { color:var(--gray); font-size:12px }
+  main { display:grid; grid-template-columns:270px 1fr; gap:16px; padding:16px 28px 40px }
+  aside, .panel, article { background:var(--ink); border:1px solid var(--line); border-radius:18px }
+  aside { padding:14px } .panel { padding:16px; margin-bottom:12px }
+  input, textarea, button { font:inherit } input, textarea { width:100%; background:#081426; color:white; border:1px solid var(--line); border-radius:12px; padding:10px 12px }
+  button { background:var(--gold); color:#1b1404; border:0; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer }
+  button.ghost { background:transparent; color:var(--gold); border:1px solid var(--gold) }
+  .sys { display:flex; justify-content:space-between; width:100%; margin:5px 0; background:transparent; color:var(--gray); border:1px solid transparent; text-align:left }
+  .sys.on { border-color:var(--gold); color:white }
+  .board { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px }
+  .col { background:#081426; border-radius:12px; padding:8px; min-height:88px } .col b { display:block; color:var(--gold); font-size:12px; letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px }
+  .card { background:#122848; border-radius:10px; padding:8px; margin-top:6px; font-size:13px }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px }
+  article { padding:12px } article h3 { margin:8px 0 6px; font-size:15px } article p { color:var(--gray); font-size:13px; min-height:48px }
+  .badge { font-size:11px; text-transform:uppercase; letter-spacing:.04em; background:var(--gold); color:#1b1404; border-radius:99px; padding:3px 8px }
+  .badge.wait { background:transparent; color:#e7c98a; border:1px solid #e7c98a } .badge.bin { background:transparent; color:#f0b4b4; border:1px solid #f0b4b4 }
+  a { color:var(--gold) } pre { white-space:pre-wrap; background:#081426; border-radius:12px; padding:12px; color:var(--gray); min-height:96px }
+  .row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+  @media(max-width:900px){ main, .board { grid-template-columns:1fr } header { flex-direction:column; align-items:start } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>AAFC <span>Studio</span></h1>
+    <p class="lead">Operator surface for the business workloads. Evidence only. No second auditor. Mail stays a dry run until the existing Gmail flag is used.</p>
+  </div>
+  <div class="stats" id="stats"></div>
+</header>
+<main>
+  <aside>
+    <input id="q" placeholder="Search integrations" aria-label="Search integrations">
+    <div id="systems" style="margin-top:12px"></div>
+  </aside>
+  <section>
+    <div class="panel">
+      <strong>Pipeline</strong>
+      <div class="board">
+        <div class="col"><b>Intake</b><div class="card">New lead</div></div>
+        <div class="col"><b>Audit</b><div class="card">Homepage evidence</div></div>
+        <div class="col"><b>Report</b><div class="card">Dry-run ready</div></div>
+        <div class="col"><b>Retainer</b><div class="card">Review in 30 days</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <strong>Run an adapter</strong>
+      <div class="row">
+        <input id="client" value="Sample client" aria-label="Client" style="flex:1">
+        <input id="email" value="owner@example.com" aria-label="Email" style="flex:1">
+      </div>
+      <textarea id="finding" style="margin-top:8px" aria-label="Finding">Missing H1 on the homepage. Evidence: title only. Fix: add one H1.</textarea>
+      <div class="row">
+        <button id="report">Client report</button>
+        <button id="ledger">Ledger CSV</button>
+        <button id="cal">Retainer calendar</button>
+        <button id="mail">Dry-run email</button>
+        <button class="ghost" id="save">Download output</button>
+      </div>
+      <pre id="out">Loading catalog…</pre>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+</main>
+<script>
+let CATALOG = [], current = "all", output = "";
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function draw(){
+  const q = $("q").value.toLowerCase();
+  const rows = CATALOG.filter(r => (current==="all" || r.systems.includes(current)) && (r.name+" "+r.capability+" "+r.repo).toLowerCase().includes(q));
+  $("grid").innerHTML = rows.map(r => `<article><span class="badge ${r.status==='wired'?'':r.status==='optional-binary'?'bin':'wait'}">${esc(r.status)}</span><h3>${esc(r.name)}</h3><p>${esc(r.capability)}</p><a href="${r.url}">${esc(r.repo)}</a></article>`).join("");
+  $("stats").innerHTML = `<div class="stat"><b>${CATALOG.length}</b><span>MIT</span></div><div class="stat"><b>${CATALOG.filter(r=>r.status==='wired').length}</b><span>wired</span></div><div class="stat"><b>${rows.length}</b><span>showing</span></div>`;
+}
+function setOut(text){ output = text; $("out").textContent = text; }
+$("q").oninput = draw;
+$("report").onclick = () => setOut(`# AAFC findings — ${$("client").value}\n\nEvidence only. Nothing here was inferred.\n\n## Homepage finding\n- Evidence: ${$("finding").value}\n- Why it matters: It blocks the next sale.\n- Fix: Fix the evidenced item only.\n`);
+$("ledger").onclick = () => setOut("date,kind,amount,status,evidence,project\n2026-10-06,retainer,1500,OWED,signed proposal,sample\n");
+$("cal").onclick = () => setOut(`BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//AAFC//Studio//EN\nBEGIN:VEVENT\nSUMMARY:Retainer review — ${$("client").value}\nRRULE:FREQ=MONTHLY;COUNT=3\nEND:VEVENT\nEND:VCALENDAR\n`);
+$("mail").onclick = () => setOut(`DRY RUN — not sent\nTo: ${$("email").value}\nSubject: Audit ready\n\n${$("finding").value}\n`);
+$("save").onclick = () => { const blob = new Blob([output || "No output yet.\n"], {type:"text/plain"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "aafc-studio-output.txt"; a.click(); };
+fetch("catalog.json").then(r => r.json()).then(rows => {
+  CATALOG = rows;
+  const systems = ["all", ...new Set(rows.flatMap(r => r.systems))];
+  $("systems").innerHTML = systems.map(s => `<button class="sys ${s==='all'?'on':''}" data-s="${s}">${s}</button>`).join("");
+  $("systems").onclick = e => { if(!e.target.dataset.s) return; current=e.target.dataset.s; [...$("systems").children].forEach(b => b.classList.toggle("on", b.dataset.s===current)); draw(); };
+  setOut("Catalog loaded. Run an adapter or filter the list.");
+  draw();
+}).catch(() => setOut("Catalog missing. Expected catalog.json beside this page."));
+</script>
+</body>
+</html>
