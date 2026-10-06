@@ -9,13 +9,15 @@
   :root { --navy:#07152D; --ink:#0c1b33; --line:#243656; --gold:#E4AC44; --white:#fff; --gray:#B6C1D2; }
   * { box-sizing:border-box } body { margin:0; background:radial-gradient(1000px 480px at 8% -12%, #1a3d6e, transparent), var(--navy); color:var(--white); font-family:Inter, sans-serif }
   header { display:flex; justify-content:space-between; gap:18px; align-items:end; padding:28px 28px 6px }
-  h1 { font-family:Montserrat, sans-serif; margin:0; font-size:30px } h1 span { color:var(--gold) }
+  h1 { font-family:Montserrat, sans-serif; margin:0; font-size:30px; letter-spacing:-.03em } h1 span { color:var(--gold) }
   .lead { color:var(--gray); max-width:680px; margin:8px 0 0 }
+  .hold { margin:14px 28px 0; border:1px solid var(--line); border-left:3px solid var(--gold); border-radius:14px; padding:12px 14px; color:var(--gray); background:#0c1b33 }
   .stats { display:flex; gap:8px; flex-wrap:wrap } .stat { background:var(--ink); border:1px solid var(--line); border-radius:14px; padding:10px 14px } .stat b { display:block; color:var(--gold); font-size:20px } .stat span { color:var(--gray); font-size:12px }
   main { display:grid; grid-template-columns:270px 1fr; gap:16px; padding:16px 28px 40px }
   aside, .panel, article { background:var(--ink); border:1px solid var(--line); border-radius:18px }
   aside { padding:14px } .panel { padding:16px; margin-bottom:12px }
   input, textarea, button { font:inherit } input, textarea { width:100%; background:#081426; color:white; border:1px solid var(--line); border-radius:12px; padding:10px 12px }
+  input:focus, textarea:focus { outline:2px solid var(--gold); outline-offset:1px }
   button { background:var(--gold); color:#1b1404; border:0; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer }
   button.ghost { background:transparent; color:var(--gold); border:1px solid var(--gold) }
   .sys { display:flex; justify-content:space-between; width:100%; margin:5px 0; background:transparent; color:var(--gray); border:1px solid transparent; text-align:left }
@@ -29,17 +31,18 @@
   .badge.wait { background:transparent; color:#e7c98a; border:1px solid #e7c98a } .badge.bin { background:transparent; color:#f0b4b4; border:1px solid #f0b4b4 }
   a { color:var(--gold) } pre { white-space:pre-wrap; background:#081426; border-radius:12px; padding:12px; color:var(--gray); min-height:96px }
   .row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
-  @media(max-width:900px){ main, .board { grid-template-columns:1fr } header { flex-direction:column; align-items:start } }
+  @media(max-width:900px){ main, .board { grid-template-columns:1fr } header { flex-direction:column; align-items:start } .hold { margin-left:16px; margin-right:16px } }
 </style>
 </head>
 <body>
 <header>
   <div>
     <h1>AAFC <span>Studio</span></h1>
-    <p class="lead">Operator surface for the business workloads. Evidence only. No second auditor. Mail stays a dry run until the existing Gmail flag is used.</p>
+    <p class="lead">Operator surface for the business workloads. Navy and gold. One auditor. JSON stays the record.</p>
   </div>
   <div class="stats" id="stats"></div>
 </header>
+<p class="hold">Evidence only. Owed money needs evidence. Mail from this page is a dry run. Whisper, Demucs, and rembg stay optional.</p>
 <main>
   <aside>
     <input id="q" placeholder="Search integrations" aria-label="Search integrations">
