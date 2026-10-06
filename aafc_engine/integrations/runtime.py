@@ -1,9 +1,6 @@
 """AAFC MIT integration runtime.
 
-Stdlib adapters so the operator studio works with no extra install.
-Optional MIT packages are declared in requirements-integrations.txt and
-are never imported unless present. This module does not audit websites
-and does not send email.
+Stdlib adapters. Does not audit websites and does not send email.
 """
 from __future__ import annotations
 
@@ -13,14 +10,23 @@ import json
 import re
 import unicodedata
 import uuid
-import zipfile
 from datetime import date, timedelta
 from pathlib import Path
 
-CATALOG_PATH = Path(__file__).with_name("catalog.json")
+HERE = Path(__file__).parent
 
 def load_catalog():
-    return json.loads(CATALOG_PATH.read_text())
+    whole = HERE / "catalog.json"
+    if whole.exists():
+        return json.loads(whole.read_text())
+    rows = []
+    for name in ("catalog-a.json", "catalog-b.json"):
+        path = HERE / name
+        if path.exists():
+            rows.extend(json.loads(path.read_text()))
+    if len(rows) != 100:
+        raise FileNotFoundError(f"expected 100 MIT rows, found {len(rows)}")
+    return rows
 
 def slug(value):
     text = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode()
@@ -41,17 +47,9 @@ def validate_record(record):
     url = str(record.get("url") or "")
     if url and not re.match(r"^https://", url):
         errors.append("url must be https")
-    amount = record.get("amount")
-    if amount is not None and not isinstance(amount, (int, float)):
-        errors.append("amount must be a number")
     if record.get("status") in {"OWED", "EXPECTED", "OVERDUE"} and not str(record.get("evidence") or "").strip():
         errors.append("owed, expected, and overdue need evidence")
     return errors
-
-def plain_language(amount, days):
-    money = f"${amount:,.2f}"
-    when = "today" if days == 0 else "tomorrow" if days == 1 else f"in {days} days"
-    return f"{money} due {when}"
 
 def markdown_report(client, findings):
     lines = [f"# AAFC findings — {sanitize(client)}", "", "Evidence only. Nothing here was inferred.", ""]
@@ -77,9 +75,9 @@ def csv_ledger(rows):
 
 def ics_schedule(title, start, count=3):
     lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//AAFC//Studio//EN"]
-    for n in range(count):
-        day = start + timedelta(days=30 * n)
-        lines += ["BEGIN:VEVENT", f"UID:{uuid.uuid4()}@aafc", f"DTSTART;VALUE=DATE:{day.strftime('%Y%m%d')}", f"SUMMARY:{title}", "END:VEVENT"]
+    for _ in range(count):
+        lines += ["BEGIN:VEVENT", f"UID:{uuid.uuid4()}@aafc", f"DTSTART;VALUE=DATE:{start.strftime('%Y%m%d')}", f"SUMMARY:{title}", "END:VEVENT"]
+        start = start + timedelta(days=30)
     lines.append("END:VCALENDAR")
     return "\n".join(lines) + "\n"
 
@@ -101,10 +99,8 @@ def run(adapter, payload):
     if adapter == "ics_schedule":
         start = date.fromisoformat(str(payload.get("start") or date.today().isoformat()))
         return {"ics": ics_schedule(str(payload.get("title") or "AAFC review"), start)}
-    if adapter == "plain_language":
-        return {"text": plain_language(float(payload.get("amount") or 0), int(payload.get("days") or 0))}
-    if adapter == "sanitize":
-        return {"text": sanitize(str(payload.get("value") or ""))}
     if adapter == "mail_preview":
         return {"preview": mail_preview(str(payload.get("to") or ""), str(payload.get("subject") or ""), str(payload.get("body") or ""))}
+    if adapter == "sanitize":
+        return {"text": sanitize(str(payload.get("value") or ""))}
     raise KeyError(adapter)
