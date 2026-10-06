@@ -1,0 +1,7 @@
+# Optional. The studio and adapters run without these.
+fpdf2
+python-slugify
+python-frontmatter
+humanize
+APScheduler
+loguru
