@@ -1,0 +1,123 @@
+# RECONSTRUCTED DRAFT -- NOT THE ORIGINAL CATALOG.
+#
+# The original aafc_engine/data/services.yaml was never committed (an
+# unanchored `data/` ignore rule hid it) and was not found in git history,
+# Vercel deployments, Google Drive, or local disks (searched 2026-10-19).
+#
+# Reconstructed 2026-10-19 from:
+#   - INTERFACE.md "services.py + data/services.yaml": the 13 slugs, required
+#     fields, one-time|recurring pricing models, empty triggers for
+#     analytics-setup and email-automation;
+#   - constraints the test suite encodes about the original: `https` is in no
+#     service's evidence_triggers; meta_description triggers seo; hsts
+#     triggers maintenance-retainer; social_facebook_reachable triggers
+#     social-media-system;
+#   - wording from CHATGPT_OPERATIONS/SERVICE_CATALOG_RECONSTRUCTION_PROPOSAL.md.
+# Every trigger is a real engine, social, or crosscheck check name
+# (load_catalog validates this). Names, taglines, coverage and paths are
+# proposals awaiting owner approval, not historical commercial terms.
+# No prices are stated or implied.
+
+- slug: website-audit
+  name: Website Audit
+  tagline: Evidence-linked findings, prioritized.
+  covers: [technical review, link health, prioritized findings report]
+  evidence_triggers: [broken_links]
+  implementation_path: Run the engine audit, review findings with the owner, deliver the prioritized report.
+  pricing_model: one-time
+
+- slug: website-design-build
+  name: Website Design and Build
+  tagline: Agreed pages, supplied assets, clear acceptance.
+  covers: [page design, responsive layout, build and handoff]
+  evidence_triggers: [viewport, cta]
+  implementation_path: Scope pages and acceptance criteria, design, build, verify on mobile and desktop.
+  pricing_model: one-time
+
+- slug: website-repair
+  name: Website Repair
+  tagline: Bounded fixes for verified defects.
+  covers: [broken links, mixed content, encoding and language declarations]
+  evidence_triggers: [broken_links, mixed_content, charset, lang]
+  implementation_path: Reproduce each finding, fix, re-run the audit to confirm.
+  pricing_model: one-time
+
+- slug: seo
+  name: Search Basics
+  tagline: Metadata and indexability, no ranking promise.
+  covers: [titles, meta descriptions, canonical tags, robots.txt, sitemap, heading structure]
+  evidence_triggers: [title, meta_description, indexability, canonical, robots_txt, sitemap, h1, heading_order]
+  implementation_path: Correct metadata and crawl controls, re-audit, record before and after.
+  pricing_model: one-time
+
+- slug: aeo-discoverability
+  name: Discoverability (AEO)
+  tagline: Structured data and previews, no AI-placement guarantee.
+  covers: [structured data, social preview metadata]
+  evidence_triggers: [structured_data, open_graph]
+  implementation_path: Add and validate structured data and Open Graph tags, re-audit.
+  pricing_model: one-time
+
+- slug: accessibility-remediation
+  name: Accessibility Remediation
+  tagline: Agreed defects, manually verified, no certification claim.
+  covers: [image alternative text, language declaration, heading order, mobile viewport]
+  evidence_triggers: [img_alt, lang, heading_order, viewport]
+  implementation_path: Fix agreed defects, verify with keyboard and screen reader, re-audit.
+  pricing_model: one-time
+
+- slug: conversion-optimization
+  name: Conversion Improvements
+  tagline: Documented form and call-to-action changes, no sales guarantee.
+  covers: [calls to action, form usability]
+  evidence_triggers: [cta, forms]
+  implementation_path: Propose changes, implement the approved ones, verify behavior.
+  pricing_model: one-time
+
+- slug: analytics-setup
+  name: Analytics Setup
+  tagline: Consented measurement, configured to the owner's requirements.
+  covers: [measurement plan, consent, implementation]
+  evidence_triggers: []
+  implementation_path: Agree requirements and consent approach, implement, verify events.
+  pricing_model: one-time
+
+- slug: lead-capture-forms
+  name: Lead Capture Forms
+  tagline: Approved forms with a verified delivery path.
+  covers: [contact forms, consent, delivery verification]
+  evidence_triggers: [forms, xcheck_contact_signals_missing]
+  implementation_path: Build the approved form, verify delivery end to end, document the path.
+  pricing_model: one-time
+
+- slug: email-automation
+  name: Email Automation
+  tagline: Approved workflows with human send and consent safeguards.
+  covers: [workflow design, consent, human approval before sending]
+  evidence_triggers: []
+  implementation_path: Agree the workflow, implement with approval gates, test with internal addresses.
+  pricing_model: one-time
+
+- slug: social-media-system
+  name: Social Media System
+  tagline: Owned-account workflow; posting approved separately.
+  covers: [profile reachability, branding consistency, website linkbacks]
+  evidence_triggers: [social_facebook_reachable, social_instagram_reachable, social_linkedin_reachable, social_tiktok_reachable, social_x_reachable, social_youtube_reachable, social_google_business_reachable, social_directories_reachable, social_facebook_branding, social_instagram_branding, social_linkedin_branding, social_tiktok_branding, social_x_branding, social_youtube_branding, social_google_business_branding, social_directories_branding, social_facebook_website_linkback, social_instagram_website_linkback, social_linkedin_website_linkback, social_tiktok_website_linkback, social_x_website_linkback, social_youtube_website_linkback, social_google_business_website_linkback, social_directories_website_linkback, xcheck_social_links_missing, xcheck_social_no_website_linkback, xcheck_cta_no_social_path]
+  implementation_path: Audit owned profiles, align branding and links, set up an approval-gated posting workflow.
+  pricing_model: one-time
+
+- slug: content-system
+  name: Content System
+  tagline: Supplied content, structured, with an editorial workflow.
+  covers: [page structure, headings, editorial workflow]
+  evidence_triggers: [h1, heading_order]
+  implementation_path: Structure supplied content, set up the editorial workflow, verify page structure.
+  pricing_model: one-time
+
+- slug: maintenance-retainer
+  name: Maintenance Retainer
+  tagline: Explicit recurring scope, limits, and cancellation.
+  covers: [security headers, performance monitoring, mixed content, periodic re-audits]
+  evidence_triggers: [hsts, ttfb, page_weight, mixed_content]
+  implementation_path: Agree monthly scope and limits, monitor, re-audit on a schedule, report.
+  pricing_model: recurring
